@@ -6,7 +6,7 @@
                     {{#if isAccount}}🔑{{/if}} {{name}}
                     {{#if balance}}
                         - {{dapp_formatBalance balance "0,0.00 UNIT"}}
-                        {{#if isNotEtherUnit}}
+                        {{#if isNotSeroUnit}}
                             ({{dapp_formatBalance balance "0,0.00 UNIT" "ether"}})
                         {{/if}}
                     {{/if}}

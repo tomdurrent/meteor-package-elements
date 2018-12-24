@@ -51,13 +51,10 @@
         color: @colorError;
         background: fadeout(@colorError, 90%);
         border-color: fadeout(@colorError, 85%);
-        transition-delay: 1s;
-        transition: background-color ease-in-out 3s, color ease-in-out 1s;
     }
 
     &:disabled {
         color: @colorGrayDark;
-        border-bottom-color: darken(@colorGrayDark, 5%);
     }
 }
 textarea {
@@ -125,9 +122,7 @@ input[type="range"] {
 
 
 .dapp-identicon {
-    position: relative;
     display: inline-block;
-    overflow: hidden;
     width: @gridWidth * 2;
     height: @gridWidth * 2;
     border-radius: 50%;
@@ -136,9 +131,7 @@ input[type="range"] {
     box-shadow: inset rgba(255,255,255,0.2) 0 2px 2px, inset rgba(0,0,0,0.3) 0 -1px 8px;
     box-shadow: inset rgba(255, 255, 255, 0.4) 0 4px 8px, inset rgba(0, 0, 0, 0.6) 0 -4px 12px;
     cursor: help;
-    transition: border-radius 2.5s;
-    transition-delay: 3s;
-
+    
     &.dapp-tiny {
         width: floor(@gridWidth / 1.5);
         height: floor(@gridWidth / 1.5);
@@ -156,23 +149,6 @@ input[type="range"] {
     }
     &.dapp-icon-loading {
         background-image: url('identicon-load.gif');
-    }
-
-    &:hover {
-      border-radius: 12.5%;
-      transition-delay: 1s;
-    }
-
-    .identicon-pixel {
-      width: 100%;
-      height: 100%;
-      transition: 5s opacity;
-      opacity:0;
-    }
-
-    .identicon-pixel:hover {
-      transition: 0.25s opacity;
-      opacity: 1;
     }
 }
 
@@ -194,18 +170,13 @@ input[type="range"] {
         font-size: 0.9em;
         text-transform: uppercase;
         font-weight: 400;
-
+        
         &.dapp-primary-button {
             font-weight: 600;
         }
     }
-
-    &.no-margins {
-        margin: 0;
-    }
 }
 
-.dapp-selector,
 .dapp-select-gas-price {
     display: inline-block;
     position: relative;
@@ -244,26 +215,6 @@ input[type="range"] {
 
 }
 
-@keyframes shrinkText {
-    from {
-        font-size: 150%;
-        opacity: 0.5;
-    }
-    to {
-        font-size: 100%;
-        opacity: 1;
-    }
-}
-
-@keyframes opacityText {
-    from {
-        color: @colorGrayLight;
-    }
-    to {
-        color: @colorGrayDark;
-    }
-}
-
 .dapp-address-input,
 .dapp-select-account {
     position: relative;
@@ -274,11 +225,8 @@ input[type="range"] {
         width: 440px;
         z-index: 1;
         margin-top: 0;
-        height: @gridHeight*2;
         padding-left: @gridWidth*1.3;
         padding-right: 0;
-        transition-delay: 0s;
-        transition: background-color ease-in-out 1s, color ease-in-out 1s;
 
         &.dapp-large {
             font-size: 1.5em;
@@ -321,7 +269,7 @@ input[type="range"] {
     .dapp-identicon {
         z-index: 2;
         position: absolute;
-        top: 4px;
+        top: 3px;
         left: 8px;
         width: @gridWidth/1.2;
         height: @gridWidth/1.2;
@@ -339,7 +287,7 @@ input[type="range"] {
         position: absolute;
         top: 6px;
         left: 13px;
-        font-size: 1.4em;
+        font-size: 1.4em;        
         color: @colorError;
     }
 
@@ -358,37 +306,6 @@ input[type="range"] {
         font-weight: 600;
         text-transform: uppercase;
         opacity: 0.6;
-    }
-
-
-
-    &.has-name {
-        .ens-name {
-            position: absolute;
-            left: 40px;
-            top: 0px;
-            color: @colorLink;
-            animation-name: shrinkText;
-            animation-duration: 0.1s;
-            animation-timing-function: ease-out;
-        }
-
-        input:not(:focus) {
-            font-size: 66%;
-            padding-top: 17px;
-            color: @colorGrayDark;
-            font-weight: 400;
-            padding-bottom: 5px;
-            animation-name: opacityText;
-            animation-duration: 1s;
-            animation-timing-function: ease-out;
-        }
-
-        input:focus + .ens-name {
-            display: none;
-            color: @colorGrayDark;
-            font-size: 66%;
-        }
     }
 }
 
@@ -411,15 +328,10 @@ input[type="range"] {
             top: -2px;
             left: 0;
         }
-    }
 }
 
-.ens-loading {
-  position: absolute;
-  top: 18px;
-  left: 24px;
 
-  .spinner-container {
-    transform: scale(0.5);
-  }
 }
+
+
+

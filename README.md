@@ -1,4 +1,4 @@
-# serocash elements
+# SeroCash elements
 
 A collection of basic Meteor templates/components to make dapps faster to build.
 
@@ -8,7 +8,7 @@ You can find a [demo here](http://ethereum-elements.meteor.com).
 
 ## Installation
 
-    $ meteor add serocash:elements
+    $ meteor add ethereum:elements
 
 ## Usage
 
@@ -16,13 +16,13 @@ The following elements can be use anywhere in your dapp.
 
 Additionally this package exposes the following packages:
 
-* [serocash:tools](https://atmospherejs.com/ethereum/tools), which gives you `SEROTools`.
-* [frozeman:template-var](https://atmospherejs.com/frozeman/template-var), which gives you the `TemplateVar.set()/.get()` functions which can be used to get values from the select account, or address input element.
+- [ethereum:tools](https://atmospherejs.com/ethereum/tools), which gives you `SeroAccounts`.
+- [frozeman:template-var](https://atmospherejs.com/frozeman/template-var), which gives you the `TemplateVar.set()/.get()` functions which can be used to get values from the select account, or address input element.
 
 Note that these packages will only be exposed to your client part of your dapp,
-if you want to use e.g. `SEROTools` on the server side add the package manually using `$ meteor add serocash:tools`.
+if you want to use e.g. `EthTools` on the server side add the package manually using `$ meteor add ethereum:tools`.
 
----
+***
 
 ### Identicon
 
@@ -40,9 +40,10 @@ Additionally you can provide a URL, which the identicon will link to.
 
 ```html
 {{> dapp_identicon identity='0x922a519ac926f69856fcfc1b2b8b846cfb3f6b4e' link="/mypath/"}}
+
 ```
 
----
+***
 
 ### Address Input
 
@@ -66,8 +67,8 @@ By passing `class="dapp-large"` you can have a larger version of the input:
 
 Additional Properties are:
 
-* `autofocus="true"`
-* `disabled="true"`
+- `autofocus="true"`
+- `disabled="true"`
 
 **Getting values reactively**
 
@@ -85,7 +86,7 @@ TemplateVar.getFrom('.my-container-element .dapp-address-input', 'value');
 
 **Note** The `value` won't be set until the content of the input is valid.
 
----
+***
 
 ### Data Textarea
 
@@ -109,8 +110,8 @@ By passing `class="dapp-large"` you can have a larger version of the input:
 
 Additional Properties are:
 
-* `autofocus="true"`
-* `disabled="true"`
+- `autofocus="true"`
+- `disabled="true"`
 
 **Getting values reactively**
 
@@ -128,36 +129,36 @@ TemplateVar.getFrom('.my-container-element .dapp-data-textarea', 'value');
 
 **Note** The `value` won't be set until the content of the textarea is valid.
 
----
+***
+
 
 ### Select account
 
 ![select account](https://raw.githubusercontent.com/ethereum/meteor-package-elements/master/screenshots/selectAccount.png)
 ![select account clicked](https://raw.githubusercontent.com/ethereum/meteor-package-elements/master/screenshots/selectAccount1.png)
 
+
 Creates a select, which can allow to select accounts. The provided array needs to have at least the follwing properties:
 
 ```js
-var myAccounts = [
-  {
+var myAccounts = [{
     type: "account",
-    name: "My Account 1",
-    balance: "1000000000000000000", // in wei
-    address: "0x922a519ac926f69856fcfc1b2b8b846cfb3f6b4e"
-  },
-  {
-    name: "My Other Address",
-    balance: "324567543200000013456", // in wei
-    address: "0x1f93d965f60faee1085a93e99562945c1bd97be0"
-  }
-];
+    name: 'My Account 1',
+    balance: '1000000000000000000', // in wei
+    address: '0x922a519ac926f69856fcfc1b2b8b846cfb3f6b4e'
+},
+{
+    name: 'My Other Address',
+    balance: '324567543200000013456', // in wei
+    address: '0x1f93d965f60faee1085a93e99562945c1bd97be0'
+}]
 ```
 
 ```html
 {{> dapp_selectAccount accounts=myAccounts}}
 ```
 
-This element works also well with the [serocash:accounts](https://atmospherejs.com/ethereum/accounts) package, which provides you with `SEROAccounts.find().fetch()` to get all current accounts.
+This element works also well with the [ethereum:accounts](https://atmospherejs.com/ethereum/accounts) package, which provides you with `SeroAccounts.find().fetch()` to get all current accounts.
 
 **Setting size**
 
@@ -169,7 +170,7 @@ By passing `class="dapp-large"` you can have a larger version of the select box:
 
 **Show icon**
 
-If you add the `showAccountTypes=true` property it will show a key unicode icon for all accounts with the `type='account'` property (set for `SEROAccounts` accounts).
+If you add the `showAccountTypes=true` property it will show a key unicode icon for all accounts with the `type='account'` property (set for `SeroAccounts` accounts). 
 
 ```html
 {{> dapp_selectAccount accounts=myAccounts showAccountTypes=true}}
@@ -188,30 +189,32 @@ TemplateVar.getFrom('.my-container-element .dapp-select-account', 'value');
 }
 ```
 
----
+***
 
 ### Gas price selection
 
 ![select gas price](https://raw.githubusercontent.com/ethereum/meteor-package-elements/master/screenshots/selectGasPrice.png?1)
 
-This element allows you users to adjust the fee (gas \* gas price) of a transaction, and gives you back either the `gasInWei` or the selected `gasPrice`.
 
-You need to provide a gas estimation which you can get using e.g. `web3.ser.estimateGas({from: .., to: .., data: ..})` or `myContract.myMethod.estimateGas({from: ..})`
-and the tool will display whats the current medium gas price based on the given `gasPrice` \* your gas usage estimation.
+This element allows you users to adjust the fee (gas * gas price) of a transaction, and gives you back either the `gasInTa` or the selected `gasPrice`.
+
+You need to provide a gas estimation which you can get using e.g. `web3.sero.estimateGas({from: .., to: .., data: ..})` or `myContract.myMethod.estimateGas({from: ..})`
+and the tool will display whats the current medium gas price based on the given `gasPrice` * your gas usage estimation.
 
 The user then can adjust the fee up and down by a factor of ~1.8.
 
-_Hint_: To get the gas price reactivly you can use the [ethereum:blocks](https://atmospherejs.com/ethereum/blocks) package's `EthBlocks.latest.gasPrice` and pass it to the `gasPrice` property.
+*Hint*: To get the gas price reactivly you can use the [ethereum:blocks](https://atmospherejs.com/ethereum/blocks) package's `EthBlocks.latest.gasPrice` and pass it to the `gasPrice` property.
+
 
 ```html
 {{> dapp_selectGasPrice gas=21000 gasPrice=50000000000 unit="ether"}}
 ```
 
-_Note_: If you don't set the `unit` property it will use `SEROTools.getUnit()`, like the `{{> dapp_formatBalance}}` element.
+*Note*: If you don't set the `unit` property it will use `EthTools.getUnit()`, like the `{{> dapp_formatBalance}}` element.
 
 **Getting values reactively**
 
-To get the `gasInWei` (gas \* adjusted gas price) or the adjusted `gasPrice` use:
+To get the `gasInTa` (gas * adjusted gas price) or the adjusted `gasPrice` use:
 
 ```js
 TemplateVar.getFrom('.my-container-element .dapp-select-gas-price', 'gasPrice');
@@ -219,12 +222,12 @@ TemplateVar.getFrom('.my-container-element .dapp-select-gas-price', 'gasPrice');
 
 // or the total fee when providing a estimated gas usage of 21000
 
-TemplateVar.getFrom('.my-container-element .dapp-select-gas-price', 'gasInWei');
+TemplateVar.getFrom('.my-container-element .dapp-select-gas-price', 'gasInTa');
 // "1181427240063000" which is "0.001181427240063" ether
 
 // or when used in an event
 'change .dapp-select-gas-price input': function(e) {
-    var value = TemplateVar.getFrom(e.currentTarget, 'gasInWei');
+    var value = TemplateVar.getFrom(e.currentTarget, 'gasInTa');
 }
 ```
 
@@ -233,7 +236,7 @@ TemplateVar.getFrom('.my-container-element .dapp-select-gas-price', 'gasInWei');
 The element can replace the - and + texts below the range selection using the `tap:i18n` package.
 If the `TAPi18n` helper is available it will use `TAPi18n.__('elements.selectGasPrice.high')` and `TAPi18n.__('elements.selectGasPrice.low')` for the texts.
 
----
+***
 
 ### Modals
 
@@ -250,27 +253,27 @@ Just place a modal placeholder before the closing body tag.
 Render the modal:
 
 ```js
-SEROElements.Modal.show("myContentTemplate");
+SeroElements.Modal.show('myContentTemplate');
 
 // Or
 
-SEROElements.Modal.show({
-  template: "myContentTemplate",
-  data: {
-    myData: "some data"
-  }
+SeroElements.Modal.show({
+    template: 'myContentTemplate',
+    data: {
+        myData: 'some data'
+    }
 });
 ```
 
 Additional options:
 
-* `closeable` - Prevents the default behaviour, which closes the modal when the overlay is clicked.
-* `class` - A class, which will be add to the modal section element
+- `closeable` - Prevents the default behaviour, which closes the modal when the overlay is clicked.
+- `class` - A class, which will be add to the modal section element
 
 ```js
-SEROElements.Modal.show("myContentTemplate", {
-  closeable: false,
-  class: "my-modal-class"
+SeroElements.Modal.show('myContentTemplate', {
+    closeable: false,
+    class: 'my-modal-class'
 });
 ```
 
@@ -278,16 +281,16 @@ Navigate to a path on close.
 This will only work when the [kadira:flow-router](https://atmospherejs.com/kadira/flow-router) or [iron:router](https://atmospherejs.com/iron/router) package is installed:
 
 ```js
-SEROElements.Modal.show("myContentTemplate", { closePath: "/dashboard" });
+SeroElements.Modal.show('myContentTemplate', {closePath: '/dashboard'});
 ```
 
 #### Close modal
 
 ```js
-SEROElements.Modal.hide();
+SeroElements.Modal.hide();
 ```
 
----
+***
 
 ### Modal Question
 
@@ -298,17 +301,16 @@ The question modal is a modal content template, which can be used to display a t
 You basically just can pass a `text`, `ok` and/or `cancel` property as a data context to set callbacks, which will be fired when the button is pressed.
 
 Additional you can:
-
-* Set the `ok` or `cancel` property to `true`, it will just close the modal without any action.
-* Pass `false` or leave the `ok` or `cancel` property empty and it won't show that buttons.
+- Set the `ok` or `cancel` property to `true`, it will just close the modal without any action.  
+- Pass `false` or leave the `ok` or `cancel` property empty and it won't show that buttons.
 
 ```js
-SEROElements.Modal.question({
-  text: "Do you want to ...",
-  ok: function() {
-    // do something on ok
-  },
-  cancel: true // simply show th cancel button and close the modal on click
+SeroElements.Modal.question({
+    text: 'Do you want to ...',
+    ok: function(){
+        // do something on ok
+    },
+    cancel: true // simply show th cancel button and close the modal on click
 });
 ```
 
@@ -317,40 +319,37 @@ SEROElements.Modal.question({
 Instead of passing a text you can also pass a template, which will be shown above the ok/cancel buttons
 
 ```js
-SEROElements.Modal.question({
-  template: "myTemplate",
-  data: {
-    my: "template data"
-  },
-  ok: function() {
-    // do something on ok
-  },
-  cancel: function() {
-    // do something on cancel
-  }
+SeroElements.Modal.question({
+    template: 'myTemplate',
+    data: {
+        my: 'template data'
+    },
+    ok: function(){
+        // do something on ok
+    },
+    cancel: function(){
+        // do something on cancel
+    }
 });
 ```
 
 #### Close question modal
 
 ```js
-SEROElements.Modal.hide();
+SeroElements.Modal.hide();
 ```
 
 Additional you can pass the same options as the modal as the second parameter:
 
 ```js
-SEROElements.Modal.question(
-  {
-    text: "Alright?",
-    ok: function() {
-      // do something on ok
+SeroElements.Modal.question({
+    text: 'Alright?',
+    ok: function(){
+        // do something on ok
     }
-  },
-  {
+}, {
     closeable: false
-  }
-);
+});
 ```
 
 #### Localization

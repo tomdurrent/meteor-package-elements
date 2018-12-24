@@ -16,115 +16,94 @@ The the factor by which the gas price should be changeable.
 
 @property toPowerFactor
 */
-var toPowerFactor = 2;
+var toPowerFactor = 1.4;
 
 /**
 Calculates the gas * gas price.
 
-@method calculateGasInWei
+@method calculategasInTa
 @return {Number}
 */
-var calculateGasInWei = function(template, gas, gasPrice, returnGasPrice) {
-  // Only defaults to 20 shannon if there's no default set
-  gasPrice = gasPrice || 20000000000;
+var calculategasInTa = function(template, gas, gasPrice, returnGasPrice){
+    // Only defaults to 50 shannon if there's no default set
+    gasPrice = gasPrice || 50000000000;
 
-  if (!_.isObject(gasPrice)) gasPrice = new BigNumber(String(gasPrice), 10);
+    if(!_.isObject(gasPrice))
+        gasPrice = new BigNumber(String(gasPrice), 10);
 
-  if (_.isUndefined(gas)) {
-    console.warn("No gas provided for {{> dapp_selectGasPrice}}");
-    return new BigNumber(0);
-  }
+    // We multiply it by factor^2 to offset the default factor multiplicator that set at -2
+    var suggestedGasPrice = gasPrice.times(new BigNumber(toPowerFactor).toPower(2));
+    
+    if(_.isUndefined(gas)) {
+        console.warn('No gas provided for {{> dapp_selectGasPrice}}');
+        return new BigNumber(0);
+    }
+    
+    // divide and multiply to round it to the nearest billion wei (1 shannon)
+    var billion = new BigNumber(1000000000);
+    suggestedGasPrice = suggestedGasPrice.times(new BigNumber(toPowerFactor).toPower(TemplateVar.get(template, 'feeMultiplicator'))).dividedBy(billion).round().times(billion);
 
-  var feeMultiplicator = Number(TemplateVar.get(template, "feeMultiplicator"));
+    return (returnGasPrice)
+        ? suggestedGasPrice
+        : suggestedGasPrice.times(gas);
+}
 
-  // divide and multiply to round it to the nearest billion wei (1 shannon)
-  var billion = new BigNumber(1000000000);
-  gasPrice = gasPrice
-    .times(new BigNumber(toPowerFactor).toPower(feeMultiplicator))
-    .dividedBy(billion)
-    .round()
-    .times(billion);
-
-  return returnGasPrice ? gasPrice : gasPrice.times(gas);
-};
-
-Template["dapp_selectGasPrice"].onCreated(function() {
-  TemplateVar.set("gasInWei", "0");
-  TemplateVar.set("gasPrice", "0");
-  TemplateVar.set("feeMultiplicator", 0);
+Template['dapp_selectGasPrice'].onCreated(function(){
+    TemplateVar.set('gasInTa', '0');
+    TemplateVar.set('gasPrice', '0');
+    TemplateVar.set('feeMultiplicator', -2);
 });
 
-Template["dapp_selectGasPrice"].helpers({
-  /**
+
+Template['dapp_selectGasPrice'].helpers({
+    /**
     Return the currently selected fee value calculate with gas price
 
     @method (fee)
     */
-  fee: function() {
-    if (
-      _.isFinite(TemplateVar.get("feeMultiplicator")) &&
-      _.isFinite(this.gas)
-    ) {
-      var template = Template.instance();
+    'fee': function(){
+        if(_.isFinite(TemplateVar.get('feeMultiplicator')) && _.isFinite(this.gas)) {
+            var template = Template.instance();
 
-      // set the value
-      TemplateVar.set(
-        "gasInWei",
-        calculateGasInWei(template, this.gas, this.gasPrice)
-          .floor()
-          .toString(10)
-      );
-      TemplateVar.set(
-        "gasPrice",
-        calculateGasInWei(template, this.gas, this.gasPrice, true)
-          .floor()
-          .toString(10)
-      );
+            // set the value
+            TemplateVar.set('gasInTa', calculategasInTa(template, this.gas, this.gasPrice).floor().toString(10));
+            TemplateVar.set('gasPrice', calculategasInTa(template, this.gas, this.gasPrice, true).floor().toString(10));
 
-      // return the fee
-      return SEROTools.formatBalance(
-        calculateGasInWei(template, this.gas, this.gasPrice).toString(10),
-        "0,0.[000000000000000000]",
-        this.unit
-      );
-    }
-  },
-  /**
+            // return the fee
+            return SeroTools.formatBalance(calculategasInTa(template, this.gas, this.gasPrice).toString(10), '0,0.[000000000000000000]', this.unit);
+        }
+    },
+    /**
     Return the current unit
 
     @method (unit)
     */
-  unit: function() {
-    var unit = this.unit || SEROTools.getUnit();
-    if (unit) return unit.toUpperCase();
-  },
-  /**
+    'unit': function(){
+        var unit = this.unit || SeroTools.getUnit();
+        if(unit)
+            return unit.toUpperCase();
+    },
+    /**
     Get the correct text, if TAPi18n is available.
 
     @method i18nText
     */
-  i18nText: function(key) {
-    if (
-      typeof TAPi18n !== "undefined" &&
-      TAPi18n.__("elements.selectGasPrice." + key) !==
-        "elements.selectGasPrice." + key
-    ) {
-      return TAPi18n.__("elements.selectGasPrice." + key);
-    } else if (typeof this[key] !== "undefined") {
-      return this[key];
-    } else {
-      return key === "high" ? "+" : "-";
+    'i18nText': function(key){
+        if(typeof TAPi18n === 'undefined') {
+            return (key === 'high') ? '+' : '-';
+        } else {
+            return TAPi18n.__('elements.selectGasPrice.'+ key);
+        }
     }
-  }
 });
 
-Template["dapp_selectGasPrice"].events({
-  /**
+Template['dapp_selectGasPrice'].events({
+    /**
     Change the selected fee
     
     @event change input[name="fee"], input input[name="fee"]
     */
-  'change input[name="fee"], input input[name="fee"]': function(e) {
-    TemplateVar.set("feeMultiplicator", Number(e.currentTarget.value));
-  }
+    'change input[name="fee"], input input[name="fee"]': function(e){
+        TemplateVar.set('feeMultiplicator', Number(e.currentTarget.value));
+    },
 });
