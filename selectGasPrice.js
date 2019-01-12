@@ -33,12 +33,12 @@ var calculategasInTa = function(template, gas, gasPrice, returnGasPrice){
 
     // We multiply it by factor^2 to offset the default factor multiplicator that set at -2
     var suggestedGasPrice = gasPrice.times(new BigNumber(toPowerFactor).toPower(2));
-    
+
     if(_.isUndefined(gas)) {
         console.warn('No gas provided for {{> dapp_selectGasPrice}}');
         return new BigNumber(0);
     }
-    
+
     // divide and multiply to round it to the nearest billion wei (1 shannon)
     var billion = new BigNumber(1000000000);
     suggestedGasPrice = suggestedGasPrice.times(new BigNumber(toPowerFactor).toPower(TemplateVar.get(template, 'feeMultiplicator'))).dividedBy(billion).round().times(billion);
@@ -51,7 +51,7 @@ var calculategasInTa = function(template, gas, gasPrice, returnGasPrice){
 Template['dapp_selectGasPrice'].onCreated(function(){
     TemplateVar.set('gasInTa', '0');
     TemplateVar.set('gasPrice', '0');
-    TemplateVar.set('feeMultiplicator', -2);
+    TemplateVar.set('feeMultiplicator', 1);
 });
 
 
@@ -67,10 +67,10 @@ Template['dapp_selectGasPrice'].helpers({
 
             // set the value
             TemplateVar.set('gasInTa', calculategasInTa(template, this.gas, this.gasPrice).floor().toString(10));
-            TemplateVar.set('gasPrice', calculategasInTa(template, this.gas, this.gasPrice, true).floor().toString(10));
+            TemplateVar.set('gasPrice', (new BigNumber(1000000000).times(TemplateVar.get('feeMultiplicator'))));
 
             // return the fee
-            return SeroTools.formatBalance(calculategasInTa(template, this.gas, this.gasPrice).toString(10), '0,0.[000000000000000000]', this.unit);
+            return SeroTools.formatBalance((new BigNumber(1000000000).times(TemplateVar.get('feeMultiplicator'))).toString(10), '0,0.[000000000000000000]', this.unit);
         }
     },
     /**
@@ -100,7 +100,7 @@ Template['dapp_selectGasPrice'].helpers({
 Template['dapp_selectGasPrice'].events({
     /**
     Change the selected fee
-    
+
     @event change input[name="fee"], input input[name="fee"]
     */
     'change input[name="fee"], input input[name="fee"]': function(e){

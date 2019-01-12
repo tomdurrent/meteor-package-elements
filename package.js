@@ -1,7 +1,7 @@
 Package.describe({
   name: 'serocash:elements',
   summary: 'Basic elements for Dapps',
-  version: '0.2.3',
+  version: '0.2.7',
   git: 'http://github.com/serocash/meteor-package-elements'
 });
 
